@@ -1,9 +1,12 @@
 
+
+# spring-data-redis-mysql-postgresql
+
+
 Run 3 databases: Redis, MySQL, PostgreSQL.
 Spring boot 2.3.1.RELEASE
 
 
-# spring-data-redis-mysql
 You have to install redis in your local with port "6379" before run this application
 
 mvn spring-boot:run
