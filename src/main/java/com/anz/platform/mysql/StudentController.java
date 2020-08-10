@@ -19,7 +19,7 @@ public class StudentController {
   private StudentRepository studentRepository;
 
   @GetMapping("/student")
-  public Student getStudent(final Long studentId) {
+  public Student getStudent(final String studentId) {
     final Optional<Student> redisExisting = studentRepository.findById(studentId);
     if (redisExisting.isPresent()) {
       log.info("{}", redisExisting.get());
@@ -43,7 +43,7 @@ public class StudentController {
   private StudentService studentService;
 
   @GetMapping("/studentNew")
-  public com.anz.platform.domain.Student getStudentNew(final Long studentId) {
+  public com.anz.platform.domain.Student getStudentNew(final String studentId) {
     try {
       com.anz.platform.domain.Student findById = studentService.findById(String.valueOf(studentId), com.anz.platform.domain.Student.class);
       if (findById != null) {

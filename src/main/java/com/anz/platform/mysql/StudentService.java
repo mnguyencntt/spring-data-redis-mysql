@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.anz.platform.domain.BaseObject;
 import com.anz.platform.domain.Student;
 import com.anz.platform.util.Constants;
+import com.anz.platform.util.JsonUtils;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -74,10 +75,12 @@ public class StudentService implements AutoCloseable {
   // INSERT INTO table_name (column1, column2, column3, ...)
   // VALUES (value1, value2, value3, ...);
   public <T extends BaseObject> Integer persist(final T item) throws SQLException {
+    String findMarksJoining = item.findMarksJoining() + "::date"; // Just apply for PostgreSQL only.
     final String insertSQL =
-        String.format("INSERT INTO %s (%s) VALUES (%s)", item.getClass().getSimpleName(), item.findFieldsJoining(), item.findMarksJoining());
+        String.format("INSERT INTO %s (%s) VALUES (%s)", item.getClass().getSimpleName(), item.findFieldsJoining(), findMarksJoining);
     log.info(insertSQL);
     final Object[] inputValues = item.findValues();
+    log.info(JsonUtils.toJson(inputValues));
     return new QueryRunner().update(connection, insertSQL, inputValues);
   }
 
@@ -90,6 +93,7 @@ public class StudentService implements AutoCloseable {
           String.format("INSERT INTO %s (%s) VALUES (%s)", item.getClass().getSimpleName(), item.findFieldsJoining(), item.findMarksJoining());
       log.info(insertSQL);
       final Object[] inputValues = item.findValues();
+      log.info(JsonUtils.toJson(inputValues));
       final Integer persisted = new QueryRunner().update(connection, insertSQL, inputValues);
       countPersisted += persisted;
     }

@@ -13,7 +13,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Student extends BaseObject {
-  private Long id;
+  private String id;
 
   private String name;
   private String age;
