@@ -1,5 +1,7 @@
 package com.anz.platform.mysql;
 
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +19,12 @@ public class StudentController {
   private StudentRepository studentRepository;
 
   @GetMapping("/student")
-  public Student getRedisStudent(final Long studentId) {
+  public Student getStudent(final Long studentId) {
     final Optional<Student> redisExisting = studentRepository.findById(studentId);
     if (redisExisting.isPresent()) {
-      // Spring boot 2.3.2 will print out: RedisStudent(id=null, name=null, age=null, creationTime=null)
-      // Spring boot 2.3.1 will print out: RedisStudent(id=12345, name=Minh, age=28, creationTime=2020-07-28T21:31:18.318)
       log.info("{}", redisExisting.get());
       return redisExisting.get();
     }
-    // Spring boot 2.3.1 will print out: Optional.empty
     log.info("{}", redisExisting);
     Student student = new Student();
     student.setId(studentId);
@@ -36,7 +35,31 @@ public class StudentController {
   }
 
   @DeleteMapping("/student")
-  public void deleteAllRedisStudent() {
+  public void deleteAllStudent() {
     studentRepository.deleteAll();
+  }
+
+  @Autowired
+  private StudentService studentService;
+
+  @GetMapping("/studentNew")
+  public com.anz.platform.domain.Student getStudentNew(final Long studentId) {
+    try {
+      com.anz.platform.domain.Student findById = studentService.findById(String.valueOf(studentId), com.anz.platform.domain.Student.class);
+      if (findById != null) {
+        return findById;
+      }
+      com.anz.platform.domain.Student student = new com.anz.platform.domain.Student();
+      student.setId(studentId);
+      student.setName("Minh");
+      student.setAge("28");
+      student.setCreationTime(Timestamp.valueOf(LocalDateTime.now()));
+      Integer persist = studentService.persist(student);
+      log.info("persist success {}", persist);
+      return studentService.findById(String.valueOf(studentId), com.anz.platform.domain.Student.class);
+    } catch (SQLException e) {
+      log.error(e.getMessage());
+      return null;
+    }
   }
 }
