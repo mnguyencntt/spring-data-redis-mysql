@@ -11,14 +11,4 @@ DELETE http://localhost:8080/redis/student#
 
 
 # Issue
-spring repository findById() is working fine on spring-data-redis version 2.3.1.RELEASE
-
-its failed on spring-data-redis version 2.3.2.RELEASE
-
-
-
-My logic code is very simple:
-
-if studentId found, return existing RedisStudent object.
-
-else create new RedisStudent & store in Redis, return new RedisStudent object.
+Run 3 database Redis, MySQL, PostgreSQL
